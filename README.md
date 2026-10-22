@@ -1,75 +1,71 @@
-# React + TypeScript + Vite
+# SafePause
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Find a little breathing room nearby.**
 
-Currently, two official plugins are available:
+SafePause is a web app that helps people find nearby places to take a break, such as parks, libraries and quiet public spaces, and shows how much to trust each detail.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Live demo:** TODO: paste your stable Vercel address
 
-## React Compiler
+> All places currently shown are **fictional demo data**, clearly labelled in the app. They are not real recommendations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## The problem
 
-## Expanding the ESLint configuration
+When you feel overwhelmed while out, finding somewhere suitable to pause is hard. Map apps show places, but not whether seating or step-free access is confirmed, or how recently anyone checked.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## What makes it different
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Every detail is **confirmed, confirmed absent, or not confirmed**. Unknown is never shown as "no". Each place shows when its information was last checked, with a gentle flag when it is old or missing.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+SafePause is a practical tool, not a medical or diagnostic app.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Features
 
-```
+- Interactive map (Leaflet and OpenStreetMap) linked to the list: selecting a pin or a card selects the same place
+- Search by name or description
+- Filters: type of place, seating confirmed, step-free access confirmed, open now (from listed hours)
+- Details panel with source link, last-checked stamp and freshness note
+- Strict filters: only a confirmed "yes" passes, so unknown values never slip through
+- Record validation that drops malformed places instead of breaking the map
+- Keyboard-friendly, with visible focus and a list alternative to the map
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Tech stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React, TypeScript, Vite, Leaflet and React-Leaflet, Vitest, deployed on Vercel.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Run it locally
 
-```
+    git clone https://github.com/ivemina/safepause.git
+    cd safepause
+    npm install
+    npm run dev
+
+## Tests
+
+    npm test
+
+23 automated tests cover filtering, freshness, opening status and record validation.
+
+## Accessibility
+
+A manual keyboard, zoom, phone-width and contrast check was completed on 22 October 2026. TODO: add the actual contrast ratio you measured.
+
+## Data and attribution
+
+Map tiles and map data: © OpenStreetMap contributors (ODbL). Current places are fictional demo data.
+
+## Known limitations
+
+- Demo data only, with no real venue information yet
+- Opening hours are only understood in two strict formats
+- The public OpenStreetMap tile server is suitable for demos, not heavy traffic
+- No database or user-submitted corrections yet
+
+## Future improvements
+
+- A small, hand-checked set of real places from OpenStreetMap
+- Supabase database and reviewed correction submissions
+- Location search
+
+## Screenshots
+
+TODO: add a screenshot of the live app
