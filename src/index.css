@@ -1,0 +1,36 @@
+:root {
+  /* Colours */
+  --paper: #f6f0e4;
+  --paper-deep: #ece3d0;
+  --ink: #1f2a24;
+  --ink-soft: #4a5750;
+  --green: #2f5d4a;
+  --green-dark: #224536;
+  --clay: #b5593a;
+  --line: #d6c9ae;
+
+  /* Fonts */
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  color: var(--green-dark);
+  line-height: 1.2;
+}

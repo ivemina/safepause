@@ -1,0 +1,267 @@
+.site-header {
+  padding: 1.5rem 1.25rem 1.25rem;
+  border-bottom: 2px solid var(--green);
+  background: var(--paper-deep);
+}
+
+.brand-name {
+  margin: 0;
+  font-size: 2.25rem;
+  letter-spacing: -0.01em;
+}
+
+.brand-tagline {
+  margin: 0.25rem 0 0;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.demo-note {
+  display: inline-block;
+  margin: 1rem 0 0;
+  padding: 0.2rem 0.6rem;
+  border: 1.5px dashed var(--clay);
+  border-radius: 3px;
+  color: var(--clay);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transform: rotate(-1deg);
+}
+
+.content {
+  padding: 1.25rem;
+}
+.place-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+}
+
+.place-card {
+  background: #fffaf0;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--green);
+  border-radius: 4px;
+  padding: 1rem 1.1rem;
+}
+
+.place-category {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.place-name {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 1.25rem;
+}
+
+.place-description {
+  margin: 0 0 0.75rem;
+}
+
+.place-facts {
+  margin: 0 0 1rem;
+}
+
+.place-facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px dotted var(--line);
+  font-size: 0.92rem;
+}
+
+.place-facts dt {
+  color: var(--ink-soft);
+}
+
+.place-facts dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+
+.stamp {
+  display: inline-block;
+  margin: 0;
+  padding: 0.15rem 0.55rem;
+  border: 2px solid var(--green);
+  border-radius: 3px;
+  color: var(--green);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transform: rotate(-1.5deg);
+}
+
+.demo-tag {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--clay);
+  font-weight: 600;
+}
+.search-label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.search-input {
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.7rem 0.9rem;
+  border: 2px solid var(--green);
+  border-radius: 4px;
+  background: #fffaf0;
+  color: var(--ink);
+  font: inherit;
+}
+
+.search-input:focus-visible {
+  outline: 3px solid var(--clay);
+  outline-offset: 2px;
+}
+
+.result-count {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+}
+
+.empty-state {
+  padding: 1rem;
+  border: 1.5px dashed var(--line);
+  border-radius: 4px;
+  color: var(--ink-soft);
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem 1.5rem;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.filter-field select {
+  padding: 0.55rem 0.7rem;
+  border: 2px solid var(--green);
+  border-radius: 4px;
+  background: #fffaf0;
+  color: var(--ink);
+  font: inherit;
+}
+
+.filter-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+.filter-check input {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--green);
+}
+
+.filter-field select:focus-visible,
+.filter-check input:focus-visible {
+  outline: 3px solid var(--clay);
+  outline-offset: 2px;
+}
+.place-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.place-card.is-selected {
+  border-left-color: var(--clay);
+  background: #fff3df;
+}
+
+.place-card .button-main {
+  margin-top: 0.9rem;
+}
+
+.button-main,
+.button-quiet {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button-main {
+  border: 2px solid var(--green);
+  background: var(--green);
+  color: #fffaf0;
+}
+
+.button-main:hover {
+  background: var(--green-dark);
+}
+
+.button-quiet {
+  border: 2px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.button-main:focus-visible,
+.button-quiet:focus-visible,
+.place-details a:focus-visible {
+  outline: 3px solid var(--clay);
+  outline-offset: 2px;
+}
+
+.place-details {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 2px solid var(--green);
+  border-radius: 4px;
+  background: #fffaf0;
+}
+
+.details-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.map-wrap {
+  margin: 1.5rem 0;
+  border: 2px solid var(--green);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.map {
+  height: 22rem;
+  width: 100%;
+}
+.fresh-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--clay);
+}
+.place-details h2:focus {
+  outline: none;
+}
