@@ -5,7 +5,7 @@ function Header() {
         <h1 className="brand-name">SafePause</h1>
         <p className="brand-tagline">Find a little breathing room nearby.</p>
       </div>
-      <p className="demo-note">Demo data: places shown are fictional examples.</p>
+      <p className="demo-note">Places come from OpenStreetMap and are not verified.</p>
     </header>
   )
 }

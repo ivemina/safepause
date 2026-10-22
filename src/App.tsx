@@ -4,7 +4,6 @@ import LocationSearch from './components/LocationSearch'
 import PlaceCard from './components/PlaceCard'
 import PlaceDetails from './components/PlaceDetails'
 import PlacesMap from './components/PlacesMap'
-import { demoPlaces } from './data/demoPlaces'
 import type { Place } from './types/place'
 import { filterPlaces } from './utils/filterPlaces'
 import type { CategoryFilter } from './utils/filterPlaces'
@@ -13,7 +12,7 @@ import { fetchNearbyPlaces } from './utils/overpass'
 import type { Bounds } from './utils/overpass'
 import { keepValidPlaces } from './utils/validatePlace'
 
-const places = keepValidPlaces(demoPlaces)
+const places: Place[] = []
 
 function App() {
   const [query, setQuery] = useState('')
