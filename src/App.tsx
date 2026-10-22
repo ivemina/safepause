@@ -39,11 +39,13 @@ function App() {
     try {
       const found = await fetchNearbyPlaces(boundsGetter.current())
       setLivePlaces(found)
-    } catch {
-      setLoadError('Could not load places right now. Please try again shortly.')
-    } finally {
-      setLoading(false)
-    }
+    } catch (error) {
+  if (error instanceof Error && error.message === 'AREA_TOO_BIG') {
+    setLoadError('The map area is too large. Zoom in a little, then try again.')
+  } else {
+    setLoadError('The place service is busy. Please wait a minute and try again.')
+  }
+}
   }
 
   const allPlaces = [...places, ...keepValidPlaces(livePlaces)]

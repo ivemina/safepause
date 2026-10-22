@@ -65,9 +65,20 @@ export function elementToPlace(element: OsmElement): Place | null {
   }
 }
 
+const SERVERS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+]
+
 export async function fetchNearbyPlaces(bounds: Bounds): Promise<Place[]> {
+  const latSpan = bounds.north - bounds.south
+  const lonSpan = bounds.east - bounds.west
+  if (latSpan > 0.1 || lonSpan > 0.15) {
+    throw new Error('AREA_TOO_BIG')
+  }
+
   const box = `${bounds.south},${bounds.west},${bounds.north},${bounds.east}`
-  const query = `[out:json][timeout:20];
+  const query = `[out:json][timeout:15];
 (
   nwr["amenity"="library"]["name"](${box});
   nwr["leisure"="park"]["name"](${box});
@@ -75,18 +86,30 @@ export async function fetchNearbyPlaces(bounds: Bounds): Promise<Place[]> {
 );
 out center 60;`
 
-  const response = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    body: 'data=' + encodeURIComponent(query),
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  })
-  if (!response.ok) throw new Error('Place lookup failed')
+  let lastError: unknown = null
+  for (const server of SERVERS) {
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 20000)
+      const response = await fetch(server, {
+        method: 'POST',
+        body: 'data=' + encodeURIComponent(query),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        signal: controller.signal,
+      })
+      clearTimeout(timer)
+      if (!response.ok) throw new Error('Server returned ' + response.status)
 
-  const data: { elements: OsmElement[] } = await response.json()
-  const places: Place[] = []
-  for (const element of data.elements) {
-    const place = elementToPlace(element)
-    if (place) places.push(place)
+      const data: { elements: OsmElement[] } = await response.json()
+      const places: Place[] = []
+      for (const element of data.elements) {
+        const place = elementToPlace(element)
+        if (place) places.push(place)
+      }
+      return places
+    } catch (error) {
+      lastError = error
+    }
   }
-  return places
+  throw lastError
 }
