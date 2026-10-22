@@ -2,11 +2,15 @@ import { useEffect, useRef } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import type { Marker as LeafletMarker } from 'leaflet'
 import type { Place } from '../types/place'
+import type { GeocodeResult } from '../utils/geocode'
+import type { Bounds } from '../utils/overpass'
 
 type PlacesMapProps = {
   places: Place[]
   selectedId: string | null
   onSelect: (id: string) => void
+  target: GeocodeResult | null
+  onBoundsReady: (getBounds: () => Bounds) => void
 }
 
 // Central Leeds. Used as the default demo area.
@@ -32,6 +36,36 @@ function FlyToSelected({ place }: { place: Place | null }) {
       map.flyTo([place.latitude, place.longitude], Math.max(map.getZoom(), 15))
     }
   }, [place, map])
+  return null
+}
+
+// Moves the map to a town or city the user searched for.
+function FlyToTarget({ target }: { target: GeocodeResult | null }) {
+  const map = useMap()
+  useEffect(() => {
+    if (target) map.flyTo([target.latitude, target.longitude], 14)
+  }, [target, map])
+  return null
+}
+
+// Lets App ask the map for its currently visible area.
+function BoundsReporter({
+  onReady,
+}: {
+  onReady: (getBounds: () => Bounds) => void
+}) {
+  const map = useMap()
+  useEffect(() => {
+    onReady(() => {
+      const b = map.getBounds()
+      return {
+        south: b.getSouth(),
+        west: b.getWest(),
+        north: b.getNorth(),
+        east: b.getEast(),
+      }
+    })
+  }, [map, onReady])
   return null
 }
 
@@ -61,7 +95,13 @@ function PlaceMarker({
   )
 }
 
-function PlacesMap({ places, selectedId, onSelect }: PlacesMapProps) {
+function PlacesMap({
+  places,
+  selectedId,
+  onSelect,
+  target,
+  onBoundsReady,
+}: PlacesMapProps) {
   const mappablePlaces = places.filter(hasValidCoordinates)
   const selectedPlace =
     mappablePlaces.find((place) => place.id === selectedId) ?? null
@@ -79,6 +119,8 @@ function PlacesMap({ places, selectedId, onSelect }: PlacesMapProps) {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FlyToSelected place={selectedPlace} />
+        <FlyToTarget target={target} />
+        <BoundsReporter onReady={onBoundsReady} />
         {mappablePlaces.map((place) => (
           <PlaceMarker
             key={place.id}

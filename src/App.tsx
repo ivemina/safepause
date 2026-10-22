@@ -1,22 +1,55 @@
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import Header from './components/Header'
+import LocationSearch from './components/LocationSearch'
 import PlaceCard from './components/PlaceCard'
 import PlaceDetails from './components/PlaceDetails'
+import PlacesMap from './components/PlacesMap'
 import { demoPlaces } from './data/demoPlaces'
+import type { Place } from './types/place'
 import { filterPlaces } from './utils/filterPlaces'
 import type { CategoryFilter } from './utils/filterPlaces'
-import PlacesMap from './components/PlacesMap'
+import type { GeocodeResult } from './utils/geocode'
+import { fetchNearbyPlaces } from './utils/overpass'
+import type { Bounds } from './utils/overpass'
 import { keepValidPlaces } from './utils/validatePlace'
 
 const places = keepValidPlaces(demoPlaces)
+
 function App() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('all')
   const [seatingConfirmed, setSeatingConfirmed] = useState(false)
   const [stepFreeConfirmed, setStepFreeConfirmed] = useState(false)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [openNow, setOpenNow] = useState(false)
-  const visiblePlaces = filterPlaces(places, {
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [target, setTarget] = useState<GeocodeResult | null>(null)
+  const [livePlaces, setLivePlaces] = useState<Place[]>([])
+  const [loading, setLoading] = useState(false)
+  const [loadError, setLoadError] = useState('')
+  const boundsGetter = useRef<(() => Bounds) | null>(null)
+
+  // Stable function, so the map doesn't re-register it on every redraw.
+  const handleBoundsReady = useCallback((getter: () => Bounds) => {
+    boundsGetter.current = getter
+  }, [])
+
+  async function findPlacesHere() {
+    if (!boundsGetter.current) return
+    setLoading(true)
+    setLoadError('')
+    try {
+      const found = await fetchNearbyPlaces(boundsGetter.current())
+      setLivePlaces(found)
+    } catch {
+      setLoadError('Could not load places right now. Please try again shortly.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const allPlaces = [...places, ...keepValidPlaces(livePlaces)]
+
+  const visiblePlaces = filterPlaces(allPlaces, {
     query,
     category,
     seatingConfirmed,
@@ -31,6 +64,8 @@ function App() {
     <>
       <Header />
       <main className="content">
+        <LocationSearch onFound={setTarget} />
+
         <label className="search-label" htmlFor="place-search">
           Search places
         </label>
@@ -80,14 +115,13 @@ function App() {
           </label>
 
           <label className="filter-check">
-  <input
-    type="checkbox"
-    checked={openNow}
-    onChange={(event) => setOpenNow(event.target.checked)}
-  />
-  Open now (listed hours)
-</label>
-
+            <input
+              type="checkbox"
+              checked={openNow}
+              onChange={(event) => setOpenNow(event.target.checked)}
+            />
+            Open now (listed hours)
+          </label>
         </div>
 
         {selectedPlace && (
@@ -97,14 +131,29 @@ function App() {
           />
         )}
 
+        <button
+          type="button"
+          className="button-main"
+          onClick={findPlacesHere}
+          disabled={loading}
+        >
+          {loading ? 'Looking…' : 'Find places here'}
+        </button>
+        <p className="result-count" role="status">
+          {loadError}
+        </p>
+
         <PlacesMap
-  places={visiblePlaces}
-  selectedId={selectedId}
-  onSelect={setSelectedId}
-/>
+          places={visiblePlaces}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+          target={target}
+          onBoundsReady={handleBoundsReady}
+        />
+
         <h2>Places to pause</h2>
         <p className="result-count">
-          Showing {visiblePlaces.length} of {places.length}
+          Showing {visiblePlaces.length} of {allPlaces.length}
         </p>
 
         {visiblePlaces.length === 0 ? (
