@@ -4,7 +4,8 @@
 
 SafePause is a web app that helps people find nearby places to take a break, such as parks, gardens and libraries, and shows how much to trust each detail.
 
-**Live demo:** TODO: paste your stable Vercel address
+**Live demo:** [safepause.vercel.app](https://safepause.vercel.app)
+
 
 > Places are loaded live from OpenStreetMap and are **not independently verified** by SafePause. Any detail OpenStreetMap does not state is shown as "Not confirmed yet".
 
@@ -53,7 +54,7 @@ Automated tests cover filtering, freshness, opening status, record validation an
 
 ## Accessibility
 
-A manual keyboard, zoom, phone-width and contrast check was completed on 22 October 2026. TODO: add the contrast ratio you measured.
+A manual keyboard, zoom and phone-width check was completed on 22 October 2026. A contrast check found the original accent colour at 4.15:1 on the page background, below the 4.5:1 target for small text, so it was darkened; the main text and accent colours now measure 6.2:1 to 7.28:1. Not every colour combination has been measured.
 
 ## Data and attribution
 
