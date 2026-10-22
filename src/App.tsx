@@ -16,7 +16,7 @@ function App() {
   const [stepFreeConfirmed, setStepFreeConfirmed] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [openNow, setOpenNow] = useState(false)
-  const visiblePlaces = filterPlaces(demoPlaces, {
+  const visiblePlaces = filterPlaces(places, {
     query,
     category,
     seatingConfirmed,
@@ -104,7 +104,7 @@ function App() {
 />
         <h2>Places to pause</h2>
         <p className="result-count">
-          Showing {visiblePlaces.length} of {demoPlaces.length}
+          Showing {visiblePlaces.length} of {places.length}
         </p>
 
         {visiblePlaces.length === 0 ? (
