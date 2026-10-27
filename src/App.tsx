@@ -7,12 +7,10 @@ import PlacesMap from './components/PlacesMap'
 import type { Place } from './types/place'
 import { filterPlaces } from './utils/filterPlaces'
 import type { CategoryFilter } from './utils/filterPlaces'
+import { fetchNearbyPlaces } from './utils/geoapifyPlaces'
 import type { GeocodeResult } from './utils/geocode'
-import { fetchNearbyPlaces } from './utils/overpass'
 import type { Bounds } from './utils/overpass'
 import { keepValidPlaces } from './utils/validatePlace'
-
-const places: Place[] = []
 
 function App() {
   const [query, setQuery] = useState('')
@@ -40,15 +38,24 @@ function App() {
       const found = await fetchNearbyPlaces(boundsGetter.current())
       setLivePlaces(found)
     } catch (error) {
-  if (error instanceof Error && error.message === 'AREA_TOO_BIG') {
-    setLoadError('The map area is too large. Zoom in a little, then try again.')
-  } else {
-    setLoadError('The place service is busy. Please wait a minute and try again.')
-  }
-}
+      const code = error instanceof Error ? error.message : ''
+      if (code === 'AREA_TOO_BIG') {
+        setLoadError(
+          'The map area is too large. Zoom in a little, then try again.',
+        )
+      } else if (code === 'NO_KEY') {
+        setLoadError('The place service is not set up on this site yet.')
+      } else {
+        setLoadError(
+          'The place service is busy. Please wait a minute and try again.',
+        )
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const allPlaces = [...places, ...keepValidPlaces(livePlaces)]
+  const allPlaces = keepValidPlaces(livePlaces)
 
   const visiblePlaces = filterPlaces(allPlaces, {
     query,
@@ -74,7 +81,7 @@ function App() {
           id="place-search"
           className="search-input"
           type="search"
-          placeholder="Try “library” or “garden”"
+          placeholder="Try “library” or “park”"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -157,7 +164,12 @@ function App() {
           Showing {visiblePlaces.length} of {allPlaces.length}
         </p>
 
-        {visiblePlaces.length === 0 ? (
+        {allPlaces.length === 0 ? (
+          <p className="empty-state">
+            No places loaded yet. Search for a town, zoom in, then click “Find
+            places here”.
+          </p>
+        ) : visiblePlaces.length === 0 ? (
           <p className="empty-state">
             No places match these filters. Try removing one.
           </p>
